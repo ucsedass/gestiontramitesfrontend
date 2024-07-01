@@ -11,6 +11,11 @@ import {
   Select,
   Textarea,
   Button,
+  Menu,
+  MenuButton,
+  Text,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 const Notas = () => {
   const columns = [
@@ -22,7 +27,10 @@ const Notas = () => {
       name: "Fecha",
       selector: (row) => row.fecha,
     },
-    ,
+    {
+      name: "Estado",
+      selector: (row) => row.estado,
+    },
     {
       name: "Folio",
       selector: (row) => row.folio,
@@ -37,8 +45,36 @@ const Notas = () => {
       selector: (row) => row.procedencia,
     },
     {
-      name: "Asunto",
+      name: (
+        <Text fontSize="2xs" as="b">
+          Asunto
+        </Text>
+      ),
       selector: (row) => row.asunto,
+    },
+
+    {
+      name: (
+        <Text fontSize="2xs" as="b">
+          {" "}
+          Accion
+        </Text>
+      ),
+
+      cell: (row) => (
+        <Box>
+          <Menu placement="right">
+            <MenuButton p={1} size="2xs" w="30px" as={Button} bgColor="white">
+              ...
+            </MenuButton>
+
+            <MenuList bgSize="sm" minW="0" w={"80px"}>
+              <MenuItem>Pasar</MenuItem>
+              <MenuItem>Aceptar</MenuItem>
+            </MenuList>
+          </Menu>
+        </Box>
+      ),
     },
   ];
   const data = [
@@ -46,6 +82,7 @@ const Notas = () => {
       id: 1,
       nota: "310-2024",
       fecha: "15-06-2024",
+      estado: "Aceptada",
       folio: "2",
       destino: "DIRECCION",
       procedencia: "UNJU",
@@ -55,6 +92,7 @@ const Notas = () => {
       id: 2,
       nota: "15-2024",
       fecha: "11-06-2024",
+      estado: "Aceptada",
       folio: "2",
       destino: "SEC ALUMNOS",
       procedencia: "RODRIGO GUZMAN",
@@ -63,6 +101,7 @@ const Notas = () => {
     {
       id: 3,
       nota: "154-2024",
+      estado: "Aceptada",
       fecha: "05-06-2024",
       folio: "4",
       destino: "SEC ALUMNOS",
@@ -72,6 +111,7 @@ const Notas = () => {
     {
       id: 4,
       nota: "07-2024",
+      estado: "Aceptada",
       fecha: "08-06-2024",
       folio: "2",
       destino: "SEC ALUMNOS",
@@ -82,6 +122,7 @@ const Notas = () => {
       id: 5,
       nota: "652-2024",
       fecha: "25-04-2024",
+      estado: "Aceptada",
       folio: "2",
       destino: "LABORATORIO",
       procedencia: "joaquin guzman",
