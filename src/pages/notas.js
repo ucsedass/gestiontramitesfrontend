@@ -47,7 +47,7 @@ const Notas = () => {
     {
       name: (
         <Text fontSize="2xs" as="b">
-          Asunto
+          Tipo tramite (clase tramite)
         </Text>
       ),
       selector: (row) => row.asunto,
@@ -187,10 +187,15 @@ const Notas = () => {
 
           <FormControl>
             <Heading fontSize={14}>Procedencia</Heading>
-            <Input></Input>
+            <Select>
+              <option>INTERNO</option>
+              <option>GESTION ACADEMICA</option>
+            </Select>
           </FormControl>
           <FormControl>
-            <Heading fontSize={14}>Asunto</Heading>
+            <Heading fontSize={14}>
+              Tipo tramite (clas tramite) AGREGAR REQUISITOS
+            </Heading>
             <Select>
               <option>TITULO EN TRAMITE</option>
               <option>INTERRUPCION DE CURSADO</option>
