@@ -21,18 +21,15 @@ const Login = () => {
   const [idUsuario, setIdUsuario] = useState(0);
   const [error, setError] = useState(false);
   const [ingreso, setIngreso] = useState(false);
+  const [sectoresUsuario, setSectoresUsuario] = useState({});
+  const [idSectorSeleccionado, setIdsectorSeleccionado] = useState(0);
 
   const login = () => {
-    console.log("mandamos a la api", usuario);
-    console.log("mandamos a la api", contraseña);
-
     clienteAxios("/login", {
       method: "POST",
       data: { usuario: usuario, contraseña: contraseña },
     })
       .then((repsuesta) => {
-        console.log(repsuesta.data);
-
         if (repsuesta.data.length == 0) {
           setError(true);
         } else {
@@ -40,9 +37,10 @@ const Login = () => {
           setIngreso(true);
           setDatosUsuario(repsuesta.data);
           setIdUsuario(repsuesta.data[0].idUsuario);
+          cargarSectores(parseInt(repsuesta.data[0].idUsuario));
         }
       })
-      .catch((erorr) => {
+      .catch((error) => {
         console.log(error);
       });
   };
@@ -50,6 +48,25 @@ const Login = () => {
   const borrarCampos = () => {
     setUsuario(" ");
     setContraseña(" ");
+    setSectoresUsuario({});
+    setIdsectorSeleccionado(0);
+  };
+
+  useEffect(() => {
+    borrarCampos();
+  }, []);
+  const cargarSectores = (idSector) => {
+    clienteAxios("/traersectoresporusuario", {
+      method: "POST",
+      data: { idUsuario: idSector },
+    })
+      .then((resp) => {
+        setSectoresUsuario(resp.data);
+        setIdsectorSeleccionado(resp.data[0].idSector);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const router = useRouter();
@@ -85,14 +102,6 @@ const Login = () => {
                 size={"sm"}
                 colorScheme="green"
                 onClick={() => {
-                  // router.push(
-                  //   {
-                  //     pathname: "/tramites",
-                  //     query: { estado: "conectado" },
-                  //   },
-                  //   "./tramites"
-                  // );
-
                   login();
                 }}
               >
@@ -116,10 +125,24 @@ const Login = () => {
               <Text mb={3} as="b">
                 {datosUsuario[0].nombre}
               </Text>
-              <Select size={"sm"} mb={3}>
-                <option>ALUMNOS</option>
-                <option>LABORATORIO</option>
-                <option>INFORMES</option>
+              <Select
+                size={"sm"}
+                mb={3}
+                name="idSector"
+                id="idSector"
+                value={idSectorSeleccionado}
+                onChange={(e) => {
+                  setIdsectorSeleccionado(e.target.value);
+                }}
+              >
+                {sectoresUsuario.length > 0
+                  ? sectoresUsuario.map(({ idSector, sectorDescripcion }) => (
+                      <option key={idSector} value={idSector}>
+                        {" "}
+                        {idSector + "|" + sectorDescripcion}
+                      </option>
+                    ))
+                  : null}
               </Select>
               <Button
                 mb={3}
@@ -132,6 +155,7 @@ const Login = () => {
                       query: {
                         estado: "conectado",
                         idUsuario,
+                        idSectorSeleccionado,
                       },
                       body: datosUsuario,
                     },
