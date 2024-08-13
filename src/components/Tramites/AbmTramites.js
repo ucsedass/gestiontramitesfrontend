@@ -12,6 +12,10 @@ import {
   Textarea,
   Button,
   Flex,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from "@chakra-ui/react";
 const AbmTramites = () => {
   const [solicitante, setSolicitante] = useState(1);
@@ -52,7 +56,7 @@ const AbmTramites = () => {
           </FormControl>
           <FormControl>
             <Heading fontSize={12}>Fecha ingreso</Heading>
-            <Input size={"sm"} type="date"></Input>
+            <Input size={"sm"} type="datetime-local"></Input>
           </FormControl>
           <FormControl>
             <Heading fontSize={12}>Folios</Heading>
@@ -145,6 +149,16 @@ const AbmTramites = () => {
         <Button mt={2} colorScheme={"green"} w={"100%"} size={"sm"}>
           Guardar
         </Button>
+
+        <Alert mt={3} mb={3} status="success">
+          <AlertIcon />
+          El trámite numero <b> 124 </b> se guardó correctamente
+        </Alert>
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Error al guardar trámite</AlertTitle>
+          <AlertDescription>Revisar datos.</AlertDescription>
+        </Alert>
       </Box>
     </>
   );

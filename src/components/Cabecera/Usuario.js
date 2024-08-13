@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter, withRouter } from "next/router";
+import clienteAxios from "@/config/axios";
 import {
   Flex,
   Box,
@@ -14,9 +15,17 @@ import {
 const Usuario = (props) => {
   const router = useRouter();
   const [logeado, setLogado] = useState(true);
+
+  useEffect(() => {
+    clienteAxios("/traerdatosusuario", {
+      method: "POST",
+      data: { idUsuario: parseInt(props.router.query.idUsuario) },
+    });
+  }, [props.router.query.idUsuario]);
+
   return (
     <>
-      {console.log(props.router.query.estado)}
+      {console.log(props.router.query)}
       {props.router.query.estado == "conectado" ? (
         <Flex minWidth="max-content" alignItems="center" gap="2">
           <Box p="2">
