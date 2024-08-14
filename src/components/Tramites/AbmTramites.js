@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import clienteAxios from "@/config/axios";
 import {
   Box,
   Center,
@@ -18,6 +18,38 @@ import {
   AlertDescription,
 } from "@chakra-ui/react";
 const AbmTramites = () => {
+  const [clasesTramites, setClasesTramites] = useState({});
+  const [tiposTramites, setTiposTramites] = useState({});
+  useEffect(() => {
+    clienteAxios("/traerclasestramites", {
+      method: "POST",
+    })
+      .then((respuesta) => {
+        console.log("Clases", respuesta.data);
+        setClasesTramites(respuesta.data);
+        cargarTiposTramites(respuesta.data[0].idClaseTramite);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  const cargarTiposTramites = (id) => {
+    console.log("valor", id);
+
+    clienteAxios("/traertipostramites", {
+      method: "POST",
+      data: { idClaseTramite: id },
+    })
+      .then((respuesta) => {
+        console.log("Tipos tramites:", respuesta.data);
+        setTiposTramites(respuesta.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const [solicitante, setSolicitante] = useState(1);
   return (
     <>
@@ -37,21 +69,37 @@ const AbmTramites = () => {
         >
           <FormControl>
             <Heading fontSize={12}>Clase trámite</Heading>
-            <Select size={"sm"}>
-              <option>INTERNO</option>
-              <option>GESTION ACADEMICA</option>
+            <Select
+              size={"sm"}
+              name="idClaseTramie"
+              id="idClaseTramite"
+              onChange={(e) => {
+                cargarTiposTramites(e.target.value);
+              }}
+            >
+              {clasesTramites.length > 0
+                ? clasesTramites.map(
+                    ({ idClaseTramite, claseTramiteDescripcion }) => (
+                      <option key={idClaseTramite} value={idClaseTramite}>
+                        {" "}
+                        {idClaseTramite + "|" + claseTramiteDescripcion}
+                      </option>
+                    )
+                  )
+                : null}
             </Select>
           </FormControl>
           <FormControl>
             <Heading fontSize={12}>Tipo trámite</Heading>
-            <Select size={"sm"}>
-              <option>TITULO EN TRAMITE</option>
-              <option>INTERRUPCION DE CURSADO</option>
-              <option>PASE DE UNIVERSIDAD</option>
-              <option>PASE INTERNO</option>
-              <option>RECONOCIMIENTO INT Y EXT</option>
-              <option>CAMBIO DE CARRERA</option>
-              <option>CERTIFICADO ANALITICO</option>
+            <Select size={"sm"} id="idTipoTramite" name="idTipoTramite">
+              {tiposTramites.length > 0
+                ? tiposTramites.map(({ idTipoTramite, tramiteDescripcion }) => (
+                    <option key={idTipoTramite} value={idTipoTramite}>
+                      {" "}
+                      {idTipoTramite + "|" + tramiteDescripcion}
+                    </option>
+                  ))
+                : null}
             </Select>
           </FormControl>
           <FormControl>
