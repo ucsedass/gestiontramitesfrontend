@@ -12,20 +12,34 @@ import {
   Link,
 } from "@chakra-ui/react";
 
+import { useUsuarioStore } from "../../store/usuarioStore";
+
 const Usuario = (props) => {
   const router = useRouter();
   const [datosUsuario, setDatosUsuario] = useState({});
   const [datosSector, setDatosSector] = useState({});
   const [logeado, setLogado] = useState(true);
-
+  const zusuario = useUsuarioStore((state) => state.idUsuario);
+  const zsector = useUsuarioStore((state) => state.idSector);
+  const zdescusuario = useUsuarioStore((state) => state.descUsuario);
+  const zdescsector = useUsuarioStore((state) => state.descSector);
+  const zconectado = useUsuarioStore((state) => state.conectado);
+  const setUsuarioLogueado = useUsuarioStore(
+    (state) => state.setUsuarioLogueado
+  );
+  const setSectorLogueado = useUsuarioStore((state) => state.setSectorLogueado);
+  const setDescUsuario = useUsuarioStore((state) => state.setDescUsuario);
+  const setDescSector = useUsuarioStore((state) => state.setDescSector);
+  const setConectado = useUsuarioStore((state) => state.setConectado);
   useEffect(() => {
     clienteAxios("/traerdatosusuario", {
       method: "POST",
-      data: { idUsuario: parseInt(props.router.query.idUsuario) },
+      data: { idUsuario: parseInt(zusuario) },
     })
       .then((respuesta) => {
-        console.log("Datos de usuario:", respuesta.data);
         setDatosUsuario(respuesta.data);
+        console.log("ressppp", respuesta.data[0].nombre);
+        setDescUsuario(respuesta.data[0].nombre);
       })
       .catch((error) => {
         console.log(error);
@@ -33,32 +47,36 @@ const Usuario = (props) => {
 
     clienteAxios("/traerdatossector", {
       method: "POST",
-      data: { idSector: parseInt(props.router.query.idSectorSeleccionado) },
+      data: { idSector: parseInt(zsector) },
     })
       .then((respuesta) => {
         console.log("Datos de sector:", respuesta.data);
-        setDatosSector(respuesta.data);
+        setDescSector(respuesta.data[0].sectorDescripcion),
+          setDatosSector(respuesta.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [props.router.query.idUsuario]);
-
+  }, [zconectado]);
+  {
+    console.log("ESTE ES EL EL ZUSUARIO (usuario):", zusuario);
+    console.log("ESTE ES EL EL ZSECTOR (usuario):", zsector);
+    console.log("ESTE ES LA DESCRIPCION  ZUSUARIO (usuario):", zdescusuario);
+    console.log("ESTE ES LA DESCRIPCION ZSECTOR (usuario):", zdescsector);
+    console.log("ESTE ES LA DESCRIPCION ZSECTOR (usuario):", zconectado);
+    console.log("datos usuario", datosUsuario);
+  }
   return (
     <>
       {console.log("Props:", props.router.query)}
-      {props.router.query.estado == "conectado" ? (
+      {zconectado == true ? (
         <Flex minWidth="max-content" alignItems="center" gap="2">
           <Box p="2">
-            {datosUsuario.length > 0 ? (
-              <Heading size="sm">{datosUsuario[0].nombre}</Heading>
-            ) : null}
+            <Heading size="sm">{zdescusuario}</Heading>
           </Box>
           <Spacer />
           <Box>
-            {datosSector.length > 0 ? (
-              <Heading size={"sm"}>{datosSector[0].sectorDescripcion} </Heading>
-            ) : null}
+            <Heading size={"sm"}>{zdescsector} </Heading>
           </Box>
           <Spacer />
           <ButtonGroup gap="2">
@@ -66,6 +84,10 @@ const Usuario = (props) => {
               size={"sm"}
               colorScheme="red"
               onClick={() => {
+                setConectado(false);
+                setUsuarioLogueado(0);
+                setSectorLogueado(0);
+                setDescUsuario("");
                 router.push(
                   {
                     pathname: "/login",

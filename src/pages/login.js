@@ -14,6 +14,7 @@ import {
   AlertTitle,
   Text,
 } from "@chakra-ui/react";
+import { useUsuarioStore } from "../store/usuarioStore";
 const Login = () => {
   const [usuario, setUsuario] = useState(" ");
   const [contraseña, setContraseña] = useState(" ");
@@ -24,6 +25,16 @@ const Login = () => {
   const [sectoresUsuario, setSectoresUsuario] = useState({});
   const [idSectorSeleccionado, setIdsectorSeleccionado] = useState(0);
 
+  const setUsuarioLogueado = useUsuarioStore(
+    (state) => state.setUsuarioLogueado
+  );
+  const setSectorLogueado = useUsuarioStore((state) => state.setSectorLogueado);
+  const setDescUsuario = useUsuarioStore((state) => state.setDescUsuario);
+  const setDescSector = useUsuarioStore((state) => state.setDescSector);
+  const setConectado = useUsuarioStore((state) => state.setConectado);
+
+  const zusuario = useUsuarioStore((state) => state.idUsuario);
+  const zsector = useUsuarioStore((state) => state.idSector);
   const login = () => {
     clienteAxios("/login", {
       method: "POST",
@@ -37,6 +48,7 @@ const Login = () => {
           setIngreso(true);
           setDatosUsuario(repsuesta.data);
           setIdUsuario(repsuesta.data[0].idUsuario);
+          setUsuarioLogueado(repsuesta.data[0].idUsuario);
           cargarSectores(parseInt(repsuesta.data[0].idUsuario));
         }
       })
@@ -50,6 +62,12 @@ const Login = () => {
     setContraseña(" ");
     setSectoresUsuario({});
     setIdsectorSeleccionado(0);
+
+    setSectorLogueado(0);
+    setUsuarioLogueado(0);
+    setDescSector("");
+    setDescUsuario("");
+    setConectado(false);
   };
 
   useEffect(() => {
@@ -63,6 +81,7 @@ const Login = () => {
       .then((resp) => {
         setSectoresUsuario(resp.data);
         setIdsectorSeleccionado(resp.data[0].idSector);
+        setSectorLogueado(resp.data[0].idSector);
       })
       .catch((error) => {
         console.log(error);
@@ -132,6 +151,7 @@ const Login = () => {
                 id="idSector"
                 value={idSectorSeleccionado}
                 onChange={(e) => {
+                  setSectorLogueado(e.target.value);
                   setIdsectorSeleccionado(e.target.value);
                 }}
               >
@@ -149,6 +169,7 @@ const Login = () => {
                 size={"sm"}
                 colorScheme={"blue"}
                 onClick={() => {
+                  setConectado(true);
                   router.push(
                     {
                       pathname: "/tramites",

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import AbmTramites from "@/components/Tramites/AbmTramites";
 import TablaTramites from "@/components/Tramites/TablaTramites";
 import { useRouter, withRouter } from "next/router";
+import { useUsuarioStore } from "@/store/usuarioStore";
 
 const Tramites = (props) => {
+  const zconectado = useUsuarioStore((state) => state.conectado);
+  const zsector = useUsuarioStore((state) => state.idSector);
   const router = useRouter();
   const [sector, setSector] = useState(0);
 
@@ -14,8 +17,19 @@ const Tramites = (props) => {
 
   return (
     <>
-      {sector === "1" ? <AbmTramites /> : null}
-      <TablaTramites />
+      {zconectado == true ? (
+        <>
+          {zsector === 1 ? (
+            <AbmTramites />
+          ) : (
+            <p>tiene que ser de mesa de entrada</p>
+          )}
+
+          <TablaTramites />
+        </>
+      ) : (
+        <p>inicie sesion</p>
+      )}
     </>
   );
 };

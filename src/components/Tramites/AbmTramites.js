@@ -20,12 +20,13 @@ import {
 const AbmTramites = () => {
   const [clasesTramites, setClasesTramites] = useState({});
   const [tiposTramites, setTiposTramites] = useState({});
+  const [solicitante, setSolicitante] = useState(1);
+  const [nuevoTramite, setNuevoTramite] = useState({});
   useEffect(() => {
     clienteAxios("/traerclasestramites", {
       method: "POST",
     })
       .then((respuesta) => {
-        console.log("Clases", respuesta.data);
         setClasesTramites(respuesta.data);
         cargarTiposTramites(respuesta.data[0].idClaseTramite);
       })
@@ -35,22 +36,21 @@ const AbmTramites = () => {
   }, []);
 
   const cargarTiposTramites = (id) => {
-    console.log("valor", id);
-
     clienteAxios("/traertipostramites", {
       method: "POST",
       data: { idClaseTramite: id },
     })
       .then((respuesta) => {
-        console.log("Tipos tramites:", respuesta.data);
         setTiposTramites(respuesta.data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  const enviarNuevoTramite = () => {
+    return "Aqui envío nuevo tramite";
+  };
 
-  const [solicitante, setSolicitante] = useState(1);
   return (
     <>
       <Box w="80%" mx="auto" mt={4}>
