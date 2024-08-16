@@ -17,11 +17,24 @@ import {
   AlertTitle,
   AlertDescription,
 } from "@chakra-ui/react";
+import { useUsuarioStore } from "@/store/usuarioStore";
 const AbmTramites = () => {
+  const zusuario = useUsuarioStore((state) => state.idUsuario);
+  const zsector = useUsuarioStore((state) => state.idSector);
+  /**************************************************************/
   const [clasesTramites, setClasesTramites] = useState({});
   const [tiposTramites, setTiposTramites] = useState({});
-  const [solicitante, setSolicitante] = useState(1);
-  const [nuevoTramite, setNuevoTramite] = useState({});
+  const [solicitantesTramites, setSolicitantesTramites] = useState({});
+  /********************************************************/
+  const [idTipoTramite, setIdtipoTramite] = useState(0);
+  const [tramiteFechaIng, setTramiteFechaing] = useState("");
+  const [tramiteFolio, setTramiteFolio] = useState(0);
+  const [idTipoSolicitanteTramite, setIdTipoSolicitanteTramite] = useState(1);
+  const [descTramSolicitanteExterno, setDescTramSolicitanteExterno] =
+    useState("");
+  const [dniSolicitanteAlumno, setDniSolicitanteAlumno] = useState(0);
+  const [observaciones, setObservaciones] = useState("");
+
   useEffect(() => {
     clienteAxios("/traerclasestramites", {
       method: "POST",
@@ -34,7 +47,24 @@ const AbmTramites = () => {
         console.log(error);
       });
   }, []);
+  useEffect(() => {
+    tiposTramites.length > 0
+      ? setIdtipoTramite(tiposTramites[0].idTipoTramite)
+      : null;
+  }, [tiposTramites]);
 
+  useEffect(() => {
+    clienteAxios("/traertipossolicitantes", {
+      method: "POST",
+    })
+      .then((respuesta) => {
+        console.log("solicitante:", respuesta.data);
+        setSolicitantesTramites(respuesta.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   const cargarTiposTramites = (id) => {
     clienteAxios("/traertipostramites", {
       method: "POST",
@@ -48,7 +78,28 @@ const AbmTramites = () => {
       });
   };
   const enviarNuevoTramite = () => {
-    return "Aqui envío nuevo tramite";
+    let objTramite = {
+      idTipoTramite: parseInt(idTipoTramite),
+      tramiteFechaIng: tramiteFechaIng,
+      tramiteFolio: parseInt(tramiteFolio),
+      idTipoSolicitanteTramite: parseInt(idTipoSolicitanteTramite),
+      descTramSolicitanteExterno: descTramSolicitanteExterno,
+      dniSolicitanteAlumno: parseInt(dniSolicitanteAlumno),
+      observaciones: observaciones,
+      idUsuarioAltaTramite: zusuario,
+      idSectorAltaTramite: zsector,
+    };
+    console.log("Este es el objeto para enviar:", objTramite);
+    clienteAxios("/nuevotramite", {
+      method: "POST",
+      data: objTramite,
+    })
+      .then((respuesta) => {
+        console.log(respuesta);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -91,7 +142,15 @@ const AbmTramites = () => {
           </FormControl>
           <FormControl>
             <Heading fontSize={12}>Tipo trámite</Heading>
-            <Select size={"sm"} id="idTipoTramite" name="idTipoTramite">
+            <Select
+              size={"sm"}
+              id="idTipoTramite"
+              name="idTipoTramite"
+              value={idTipoTramite}
+              onChange={(e) => {
+                setIdtipoTramite(e.target.value);
+              }}
+            >
               {tiposTramites.length > 0
                 ? tiposTramites.map(({ idTipoTramite, tramiteDescripcion }) => (
                     <option key={idTipoTramite} value={idTipoTramite}>
@@ -104,11 +163,28 @@ const AbmTramites = () => {
           </FormControl>
           <FormControl>
             <Heading fontSize={12}>Fecha ingreso</Heading>
-            <Input size={"sm"} type="datetime-local"></Input>
+            <Input
+              name="tramiteFechaIng"
+              id="tramiteFechaIng"
+              value={tramiteFechaIng}
+              size={"sm"}
+              onChange={(e) => {
+                setTramiteFechaing(e.target.value);
+              }}
+              type="datetime-local"
+            ></Input>
           </FormControl>
           <FormControl>
             <Heading fontSize={12}>Folios</Heading>
-            <Input size={"sm"}></Input>
+            <Input
+              name="tramiteFolio"
+              id="tramiteFolio"
+              value={tramiteFolio}
+              size={"sm"}
+              onChange={(e) => {
+                setTramiteFolio(e.target.value);
+              }}
+            ></Input>
           </FormControl>
         </Stack>
 
@@ -124,23 +200,49 @@ const AbmTramites = () => {
           <FormControl>
             <Heading fontSize={12}>Solicitante</Heading>
             <Select
+              id="idTipoSolicitanteTramite"
+              name="idTipoSolicitanteTramite"
+              value={idTipoSolicitanteTramite}
               size={"sm"}
               onChange={(e) => {
-                setSolicitante(e.target.value);
+                setIdTipoSolicitanteTramite(e.target.value);
               }}
             >
-              <option value={1}>ALUMNO</option>
-              <option value={2}>EXTERNO</option>
+              {solicitantesTramites.length > 0
+                ? solicitantesTramites.map(
+                    ({
+                      idTipoSolicitanteTramite,
+                      tipoSolicitanteTramiteDescripcion,
+                    }) => (
+                      <option
+                        key={idTipoSolicitanteTramite}
+                        value={idTipoSolicitanteTramite}
+                      >
+                        {" "}
+                        {idTipoSolicitanteTramite +
+                          "|" +
+                          tipoSolicitanteTramiteDescripcion}
+                      </option>
+                    )
+                  )
+                : null}
             </Select>
           </FormControl>
 
-          {solicitante === "1" ? (
+          {idTipoSolicitanteTramite == 1 ? (
             <>
               <FormControl>
                 <Heading fontSize={12}>DNI</Heading>
                 <Flex>
                   {" "}
-                  <Input size={"sm"}></Input>
+                  <Input
+                    name="dniSolicitanteAlumno"
+                    id="dniSolicitanteAlumno"
+                    onChange={(e) => {
+                      setDniSolicitanteAlumno(e.target.value);
+                    }}
+                    size={"sm"}
+                  ></Input>
                   <Button mx="2" size={"sm"} colorScheme={"orange"}>
                     Buscar
                   </Button>
@@ -155,7 +257,11 @@ const AbmTramites = () => {
             <>
               <FormControl>
                 <Heading fontSize={12}>Descripcion solicitante externo</Heading>
-                <Input></Input>
+                <Input
+                  onChange={(e) => {
+                    setDescTramSolicitanteExterno(e.target.value);
+                  }}
+                ></Input>
               </FormControl>
             </>
           )}
@@ -190,11 +296,25 @@ const AbmTramites = () => {
         >
           <FormControl>
             <Heading fontSize={12}>Observaciones</Heading>
-            <Textarea></Textarea>
+            <Textarea
+              name="observaciones"
+              id="observaciones"
+              onChange={(e) => {
+                setObservaciones(e.target.value);
+              }}
+            ></Textarea>
           </FormControl>
         </Stack>
 
-        <Button mt={2} colorScheme={"green"} w={"100%"} size={"sm"}>
+        <Button
+          mt={2}
+          colorScheme={"green"}
+          w={"100%"}
+          size={"sm"}
+          onClick={() => {
+            enviarNuevoTramite();
+          }}
+        >
           Guardar
         </Button>
 
