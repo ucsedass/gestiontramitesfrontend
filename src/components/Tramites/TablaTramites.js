@@ -95,6 +95,8 @@ const TablaTramites = () => {
           <Badge colorScheme={"green"}>{row.estadoDescripcion}</Badge>
         ) : row.idEstado === 2 ? (
           <Badge colorScheme={"purple"}>{row.estadoDescripcion}</Badge>
+        ) : row.idEstado === 3 ? (
+          <Badge colorScheme={"orange"}> {row.estadoDescripcion} </Badge>
         ) : null,
       width: "200px",
     },
@@ -124,15 +126,20 @@ const TablaTramites = () => {
             </MenuButton>
 
             <MenuList bgSize="sm" minW="0" w={"80px"}>
-              <MenuItem
-                onClick={() => {
-                  setTramiteSeleccionado(row.idTramite);
-                  setModalNuevoPase(true);
-                }}
-              >
-                Pasar
-              </MenuItem>
-              <MenuItem>Aceptar</MenuItem>
+              {row.idEstado === 1 ? (
+                <>
+                  <MenuItem
+                    onClick={() => {
+                      setTramiteSeleccionado(row.idTramite);
+                      setModalNuevoPase(true);
+                    }}
+                  >
+                    Pasar
+                  </MenuItem>
+                  <MenuItem>Finalizar</MenuItem>{" "}
+                </>
+              ) : null}
+              {row.idEstado === 2 ? <MenuItem>Aceptar</MenuItem> : null}
             </MenuList>
           </Menu>
         </Box>
@@ -146,13 +153,27 @@ const TablaTramites = () => {
       sectorSeleccionado,
       tramiteSeleccionado,
     });
+    clienteAxios("/nuevopase", {
+      method: "POST",
+      data: {
+        idTramite: tramiteSeleccionado,
+        idSectorDestino: sectorSeleccionado,
+      },
+    })
+      .then((respuesta) => {
+        console.log("Sectores:", respuesta.data);
+        setActualizar(!zactualizar);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
     <>
       <Box w="80%" mx="auto" mt={4}>
         <Center>
-          <FormLabel mb="0px">TRAMITES CARGADOS</FormLabel>
+          <FormLabel mb="0px">MIS TRÁMITES</FormLabel>
         </Center>
         <TablaNotas
           columns={columns}
