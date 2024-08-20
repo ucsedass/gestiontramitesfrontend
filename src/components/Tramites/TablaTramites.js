@@ -1,56 +1,111 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import TablaNotas from "react-data-table-component";
+import { useUsuarioStore } from "@/store/usuarioStore";
+import clienteAxios from "@/config/axios";
+import Moment from "moment";
 import {
   Box,
   Center,
   FormLabel,
-  FormControl,
-  Stack,
-  Heading,
-  Input,
-  Select,
-  Textarea,
   Button,
   Menu,
   MenuButton,
   Text,
   MenuList,
   MenuItem,
+  Badge,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  ModalFooter,
+  ModalHeader,
+  Select,
 } from "@chakra-ui/react";
+import { estiloTablas } from "../styles/estiloTablas";
+
 const TablaTramites = () => {
+  const [tramites, setTramites] = useState([]);
+  const [tramiteSeleccionado, setTramiteSeleccionado] = useState(0);
+  const [sectorSeleccionado, setSectorSeleccionado] = useState(0);
+  const [sectores, setSectores] = useState([]);
+  const zsector = useUsuarioStore((state) => state.idSector);
+  const zactualizar = useUsuarioStore((state) => state.actualizar);
+  const setActualizar = useUsuarioStore((state) => state.setActualizar);
+  const [modalNuevoPase, setModalNuevoPase] = useState(false);
+
+  useEffect(() => {
+    clienteAxios("/traertramites", {
+      method: "POST",
+      data: { idSector: zsector },
+    })
+      .then((respuesta) => {
+        console.log("Tramites:", respuesta.data);
+        setTramites(respuesta.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [zactualizar]);
+
+  useEffect(() => {
+    clienteAxios("/traersectores", {
+      method: "POST",
+    })
+      .then((respuesta) => {
+        console.log("Sectores:", respuesta.data);
+        setSectores(respuesta.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   const columns = [
     {
-      name: "Nota",
-      selector: (row) => row.nota,
+      name: "Tramite",
+      selector: (row) => row.tramiteNum + "-" + row.tramiteAño,
+      width: "80px",
     },
     {
       name: "Fecha",
-      selector: (row) => row.fecha,
+      selector: (row) => Moment(row.tramiteFechaIng).format("DD-MM-YYYY HH:mm"),
+      width: "120px",
     },
     {
-      name: "Estado",
-      selector: (row) => row.estado,
+      name: "Folios",
+      selector: (row) => row.tramiteFolio,
+      width: "60px",
+      center: true,
     },
     {
-      name: "Folio",
-      selector: (row) => row.folio,
+      name: "Solicitante",
+      selector: (row) =>
+        row.idTipoSolicitanteTramite === 1
+          ? row.dniSolicitanteAlumno
+          : row.descTramSolicitanteExterno,
+
+      width: "auto",
     },
     ,
     {
-      name: "Sec Destino",
-      selector: (row) => row.destino,
+      name: "Estado",
+      selector: (row) =>
+        row.idEstado === 1 ? (
+          <Badge colorScheme={"green"}>{row.estadoDescripcion}</Badge>
+        ) : row.idEstado === 2 ? (
+          <Badge colorScheme={"purple"}>{row.estadoDescripcion}</Badge>
+        ) : null,
+      width: "200px",
     },
-    {
-      name: "Procedencia",
-      selector: (row) => row.procedencia,
-    },
+
     {
       name: (
         <Text fontSize="2xs" as="b">
-          Tipo tramite (clase tramite)
+          Tipo tramite
         </Text>
       ),
-      selector: (row) => row.asunto,
+      selector: (row) => row.tramiteDescripcion,
     },
 
     {
@@ -69,7 +124,14 @@ const TablaTramites = () => {
             </MenuButton>
 
             <MenuList bgSize="sm" minW="0" w={"80px"}>
-              <MenuItem>Pasar</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  setTramiteSeleccionado(row.idTramite);
+                  setModalNuevoPase(true);
+                }}
+              >
+                Pasar
+              </MenuItem>
               <MenuItem>Aceptar</MenuItem>
             </MenuList>
           </Menu>
@@ -77,66 +139,78 @@ const TablaTramites = () => {
       ),
     },
   ];
-  const data = [
-    {
-      id: 1,
-      nota: "310-2024",
-      fecha: "15-06-2024",
-      estado: "Aceptada",
-      folio: "2",
-      destino: "DIRECCION",
-      procedencia: "UNJU",
-      asunto: "PASE DE UNIVERSIDAD",
-    },
-    {
-      id: 2,
-      nota: "15-2024",
-      fecha: "11-06-2024",
-      estado: "Aceptada",
-      folio: "2",
-      destino: "SEC ALUMNOS",
-      procedencia: "RODRIGO GUZMAN",
-      asunto: "TITULO EN TRAMITE",
-    },
-    {
-      id: 3,
-      nota: "154-2024",
-      estado: "Aceptada",
-      fecha: "05-06-2024",
-      folio: "4",
-      destino: "SEC ALUMNOS",
-      procedencia: "JOAQUIN GUZMAN",
-      asunto: "CAMBIO DE CARRERA",
-    },
-    {
-      id: 4,
-      nota: "07-2024",
-      estado: "Aceptada",
-      fecha: "08-06-2024",
-      folio: "2",
-      destino: "SEC ALUMNOS",
-      procedencia: "NOVA INFORMATICA",
-      asunto: "TITULO EN TRAMITE",
-    },
-    {
-      id: 5,
-      nota: "652-2024",
-      fecha: "25-04-2024",
-      estado: "Aceptada",
-      folio: "2",
-      destino: "LABORATORIO",
-      procedencia: "joaquin guzman",
-      asunto: "TITULO EN TRAMITE",
-    },
-  ];
+  console.log("Actualizar:", zactualizar);
+
+  const realizarPase = () => {
+    console.log("aqui se realiza el pase", {
+      sectorSeleccionado,
+      tramiteSeleccionado,
+    });
+  };
+
   return (
     <>
       <Box w="80%" mx="auto" mt={4}>
         <Center>
           <FormLabel mb="0px">TRAMITES CARGADOS</FormLabel>
         </Center>
-        <TablaNotas columns={columns} data={data} />
+        <TablaNotas
+          columns={columns}
+          data={tramites}
+          noDataComponent={"No tiene tramites en su sector"}
+          customStyles={estiloTablas}
+        />
       </Box>
+
+      <Modal
+        isOpen={modalNuevoPase}
+        onClose={() => {
+          setModalNuevoPase(false);
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody>
+            <p>
+              Tramite:{tramiteSeleccionado}Sector: {sectorSeleccionado}
+            </p>
+
+            <Select
+              size={"sm"}
+              name="sectorSeleccionado"
+              id="sectorSeleccionado"
+              onChange={(e) => {
+                setSectorSeleccionado(e.target.value);
+              }}
+            >
+              {sectores.length > 0
+                ? sectores.map(({ idSector, sectorDescripcion }) => (
+                    <option key={idSector} value={idSector}>
+                      {" "}
+                      {idSector + "|" + sectorDescripcion}
+                    </option>
+                  ))
+                : null}
+            </Select>
+            <Button
+              colorScheme={"green"}
+              onClick={() => {
+                realizarPase();
+              }}
+            >
+              REALIZAR PASE
+            </Button>
+            <Button
+              size={"sm"}
+              onClick={() => {
+                setModalNuevoPase(false);
+              }}
+            >
+              cerrar
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

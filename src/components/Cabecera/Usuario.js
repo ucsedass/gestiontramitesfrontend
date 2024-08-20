@@ -38,7 +38,6 @@ const Usuario = (props) => {
     })
       .then((respuesta) => {
         setDatosUsuario(respuesta.data);
-        console.log("ressppp", respuesta.data[0].nombre);
         setDescUsuario(respuesta.data[0].nombre);
       })
       .catch((error) => {
@@ -50,7 +49,6 @@ const Usuario = (props) => {
       data: { idSector: parseInt(zsector) },
     })
       .then((respuesta) => {
-        console.log("Datos de sector:", respuesta.data);
         setDescSector(respuesta.data[0].sectorDescripcion),
           setDatosSector(respuesta.data);
       })
@@ -58,14 +56,7 @@ const Usuario = (props) => {
         console.log(error);
       });
   }, [zconectado]);
-  {
-    console.log("ESTE ES EL EL ZUSUARIO (usuario):", zusuario);
-    console.log("ESTE ES EL EL ZSECTOR (usuario):", zsector);
-    console.log("ESTE ES LA DESCRIPCION  ZUSUARIO (usuario):", zdescusuario);
-    console.log("ESTE ES LA DESCRIPCION ZSECTOR (usuario):", zdescsector);
-    console.log("ESTE ES LA DESCRIPCION ZSECTOR (usuario):", zconectado);
-    console.log("datos usuario", datosUsuario);
-  }
+
   return (
     <>
       {console.log("Props:", props.router.query)}

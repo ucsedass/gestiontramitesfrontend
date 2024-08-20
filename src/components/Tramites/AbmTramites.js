@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import clienteAxios from "@/config/axios";
+import Moment from "moment";
 import {
   Box,
   Center,
@@ -21,13 +22,17 @@ import { useUsuarioStore } from "@/store/usuarioStore";
 const AbmTramites = () => {
   const zusuario = useUsuarioStore((state) => state.idUsuario);
   const zsector = useUsuarioStore((state) => state.idSector);
+  const zactualizar = useUsuarioStore((state) => state.actualizar);
+  const setActualizar = useUsuarioStore((state) => state.setActualizar);
   /**************************************************************/
   const [clasesTramites, setClasesTramites] = useState({});
   const [tiposTramites, setTiposTramites] = useState({});
   const [solicitantesTramites, setSolicitantesTramites] = useState({});
   /********************************************************/
   const [idTipoTramite, setIdtipoTramite] = useState(0);
-  const [tramiteFechaIng, setTramiteFechaing] = useState("");
+  const [tramiteFechaIng, setTramiteFechaing] = useState(
+    Moment(Date.now()).format("DD/MM/YYYY HH:mm").toString()
+  );
   const [tramiteFolio, setTramiteFolio] = useState(0);
   const [idTipoSolicitanteTramite, setIdTipoSolicitanteTramite] = useState(1);
   const [descTramSolicitanteExterno, setDescTramSolicitanteExterno] =
@@ -58,7 +63,6 @@ const AbmTramites = () => {
       method: "POST",
     })
       .then((respuesta) => {
-        console.log("solicitante:", respuesta.data);
         setSolicitantesTramites(respuesta.data);
       })
       .catch((error) => {
@@ -104,6 +108,7 @@ const AbmTramites = () => {
 
   return (
     <>
+      {tramiteFechaIng}
       <Box w="80%" mx="auto" mt={4}>
         <Center>
           <FormLabel mb="0px">NUEVO TRAMITE</FormLabel>
@@ -195,7 +200,7 @@ const AbmTramites = () => {
           spacing={2}
           border="solid 2px #F1F1F1"
           p={2}
-          mt={5}
+          mt={1}
         >
           <FormControl>
             <Heading fontSize={12}>Solicitante</Heading>
@@ -274,7 +279,7 @@ const AbmTramites = () => {
           spacing={2}
           border="solid 2px #F1F1F1"
           p={2}
-          mt={5}
+          mt={1}
         >
           {" "}
           <FormControl>
@@ -292,7 +297,7 @@ const AbmTramites = () => {
           spacing={2}
           border="solid 2px #F1F1F1"
           p={2}
-          mt={5}
+          mt={1}
         >
           <FormControl>
             <Heading fontSize={12}>Observaciones</Heading>
@@ -313,20 +318,22 @@ const AbmTramites = () => {
           size={"sm"}
           onClick={() => {
             enviarNuevoTramite();
+            setActualizar(!zactualizar);
           }}
         >
           Guardar
         </Button>
 
-        <Alert mt={3} mb={3} status="success">
+        {/* <Alert mt={3} mb={3} status="success">
           <AlertIcon />
           El trámite numero <b> 124 </b> se guardó correctamente
-        </Alert>
-        <Alert status="error">
+        </Alert> */}
+
+        {/* <Alert status="error">
           <AlertIcon />
           <AlertTitle>Error al guardar trámite</AlertTitle>
           <AlertDescription>Revisar datos.</AlertDescription>
-        </Alert>
+        </Alert> */}
       </Box>
     </>
   );
