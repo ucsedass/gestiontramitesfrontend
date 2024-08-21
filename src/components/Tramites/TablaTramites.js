@@ -40,7 +40,6 @@ const TablaTramites = () => {
       data: { idSector: zsector },
     })
       .then((respuesta) => {
-        console.log("Tramites:", respuesta.data);
         setTramites(respuesta.data);
       })
       .catch((error) => {
@@ -53,7 +52,6 @@ const TablaTramites = () => {
       method: "POST",
     })
       .then((respuesta) => {
-        console.log("Sectores:", respuesta.data);
         setSectores(respuesta.data);
       })
       .catch((error) => {
@@ -76,7 +74,6 @@ const TablaTramites = () => {
       name: "Folios",
       selector: (row) => row.tramiteFolio,
       width: "60px",
-      center: true,
     },
     {
       name: "Solicitante",
@@ -136,23 +133,32 @@ const TablaTramites = () => {
                   >
                     Pasar
                   </MenuItem>
-                  <MenuItem>Finalizar</MenuItem>{" "}
+                  <MenuItem
+                    onClick={() => {
+                      cambiarEstadoTramite(row.idTramite, 3);
+                    }}
+                  >
+                    Finalizar
+                  </MenuItem>{" "}
                 </>
               ) : null}
-              {row.idEstado === 2 ? <MenuItem>Aceptar</MenuItem> : null}
+              {row.idEstado === 2 ? (
+                <MenuItem
+                  onClick={() => {
+                    cambiarEstadoTramite(row.idTramite, 1);
+                  }}
+                >
+                  Aceptar
+                </MenuItem>
+              ) : null}
             </MenuList>
           </Menu>
         </Box>
       ),
     },
   ];
-  console.log("Actualizar:", zactualizar);
 
   const realizarPase = () => {
-    console.log("aqui se realiza el pase", {
-      sectorSeleccionado,
-      tramiteSeleccionado,
-    });
     clienteAxios("/nuevopase", {
       method: "POST",
       data: {
@@ -161,7 +167,22 @@ const TablaTramites = () => {
       },
     })
       .then((respuesta) => {
-        console.log("Sectores:", respuesta.data);
+        setActualizar(!zactualizar);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const cambiarEstadoTramite = (idTramite, nuevoEstadoTramite) => {
+    clienteAxios("/cambiarestadotramite", {
+      method: "POST",
+      data: {
+        idTramite: parseInt(idTramite),
+        nuevoEstadoTramite: parseInt(nuevoEstadoTramite),
+      },
+    })
+      .then((respuesta) => {
         setActualizar(!zactualizar);
       })
       .catch((error) => {

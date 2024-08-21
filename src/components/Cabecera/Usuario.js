@@ -59,7 +59,6 @@ const Usuario = (props) => {
 
   return (
     <>
-      {console.log("Props:", props.router.query)}
       {zconectado == true ? (
         <Flex minWidth="max-content" alignItems="center" gap="2">
           <Box p="2">
