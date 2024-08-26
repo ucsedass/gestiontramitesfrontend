@@ -59,41 +59,37 @@ const Usuario = (props) => {
 
   return (
     <>
-      {zconectado == true ? (
-        <Flex minWidth="max-content" alignItems="center" gap="2">
-          <Box p="2">
-            <Heading size="sm">{zdescusuario}</Heading>
-          </Box>
-          <Spacer />
-          <Box>
-            <Heading size={"sm"}>{zdescsector} </Heading>
-          </Box>
-          <Spacer />
-          <ButtonGroup gap="2">
-            <Button
-              size={"sm"}
-              colorScheme="red"
-              onClick={() => {
-                setConectado(false);
-                setUsuarioLogueado(0);
-                setSectorLogueado(0);
-                setDescUsuario("");
-                router.push(
-                  {
-                    pathname: "/login",
-                    query: { estado: "desconectado" },
-                  },
-                  "./login"
-                );
-              }}
-            >
-              cerrar sesion
-            </Button>
-          </ButtonGroup>
-        </Flex>
-      ) : (
-        <></>
-      )}
+      <Flex minWidth="max-content" alignItems="center" gap="2">
+        <Box p="2">
+          <Heading size="sm">{zdescusuario}</Heading>
+        </Box>
+        <Spacer />
+        <Box>
+          <Heading size={"sm"}>{zdescsector} </Heading>
+        </Box>
+        <Spacer />
+        <ButtonGroup gap="2">
+          <Button
+            size={"sm"}
+            colorScheme="red"
+            onClick={() => {
+              setConectado(false);
+              setUsuarioLogueado(0);
+              setSectorLogueado(0);
+              setDescUsuario("");
+              router.push(
+                {
+                  pathname: "/login",
+                  query: { estado: "desconectado" },
+                },
+                "./login"
+              );
+            }}
+          >
+            cerrar sesion
+          </Button>
+        </ButtonGroup>
+      </Flex>
     </>
   );
 };

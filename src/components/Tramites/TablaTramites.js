@@ -29,6 +29,7 @@ const TablaTramites = () => {
   const [tramiteSeleccionado, setTramiteSeleccionado] = useState(0);
   const [sectorSeleccionado, setSectorSeleccionado] = useState(0);
   const [sectores, setSectores] = useState([]);
+  const zusuario = useUsuarioStore((state) => state.idUsuario);
   const zsector = useUsuarioStore((state) => state.idSector);
   const zactualizar = useUsuarioStore((state) => state.actualizar);
   const setActualizar = useUsuarioStore((state) => state.setActualizar);
@@ -164,6 +165,8 @@ const TablaTramites = () => {
       data: {
         idTramite: tramiteSeleccionado,
         idSectorDestino: sectorSeleccionado,
+        idSectorOrigen: zsector,
+        idUsuarioOrigen: zusuario,
       },
     })
       .then((respuesta) => {
