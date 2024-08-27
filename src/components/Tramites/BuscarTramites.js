@@ -38,7 +38,6 @@ const BuscarTramites = () => {
     <>
       <Stack
         direction={{ base: "column", sm: "column", lg: "row" }}
-        w="80%"
         mx="auto"
         spacing={2}
         border="solid 2px #F1F1F1"

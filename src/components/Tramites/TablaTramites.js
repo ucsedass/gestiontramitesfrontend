@@ -21,6 +21,8 @@ import {
   ModalFooter,
   ModalHeader,
   Select,
+  Input,
+  Textarea,
 } from "@chakra-ui/react";
 import { estiloTablas } from "../styles/estiloTablas";
 
@@ -28,6 +30,7 @@ const TablaTramites = () => {
   const [tramites, setTramites] = useState([]);
   const [tramiteSeleccionado, setTramiteSeleccionado] = useState(0);
   const [sectorSeleccionado, setSectorSeleccionado] = useState(0);
+  const [observacionesPase, setObservacionesPase] = useState("");
   const [sectores, setSectores] = useState([]);
   const zusuario = useUsuarioStore((state) => state.idUsuario);
   const zsector = useUsuarioStore((state) => state.idSector);
@@ -146,7 +149,7 @@ const TablaTramites = () => {
               {row.idEstado === 2 ? (
                 <MenuItem
                   onClick={() => {
-                    cambiarEstadoTramite(row.idTramite, 1);
+                    aceptarPase(row.idTramite, 1);
                   }}
                 >
                   Aceptar
@@ -167,6 +170,24 @@ const TablaTramites = () => {
         idSectorDestino: sectorSeleccionado,
         idSectorOrigen: zsector,
         idUsuarioOrigen: zusuario,
+        observaciones: observacionesPase,
+      },
+    })
+      .then((respuesta) => {
+        setActualizar(!zactualizar);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const aceptarPase = (idTramite, nuevoEstadoTramite) => {
+    clienteAxios("/aceptarpase", {
+      method: "POST",
+      data: {
+        idTramite: parseInt(idTramite),
+        nuevoEstadoTramite: parseInt(nuevoEstadoTramite),
+        idUsuarioDestino: parseInt(zusuario),
       },
     })
       .then((respuesta) => {
@@ -237,6 +258,15 @@ const TablaTramites = () => {
                   ))
                 : null}
             </Select>
+            <Textarea
+              name="observacionespase"
+              id="observacionespase"
+              value={observacionesPase}
+              onChange={(e) => {
+                setObservacionesPase(e.target.value);
+              }}
+              mt={2}
+            ></Textarea>
             <Button
               colorScheme={"green"}
               onClick={() => {
