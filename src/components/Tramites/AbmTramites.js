@@ -31,7 +31,7 @@ const AbmTramites = () => {
   /********************************************************/
   const [idTipoTramite, setIdtipoTramite] = useState(0);
   const [tramiteFechaIng, setTramiteFechaing] = useState(
-    Moment(Date.now()).format("DD/MM/YYYY HH:mm").toString()
+    Moment(new Date()).format("YYYY-MM-DDTHH:mm")
   );
   const [tramiteFolio, setTramiteFolio] = useState(0);
   const [idTipoSolicitanteTramite, setIdTipoSolicitanteTramite] = useState(1);
@@ -108,7 +108,6 @@ const AbmTramites = () => {
 
   return (
     <>
-      {tramiteFechaIng}
       <Box w="80%" mx="auto" mt={4}>
         <Center>
           <FormLabel mb="0px">NUEVO TRAMITE</FormLabel>

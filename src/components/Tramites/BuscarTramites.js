@@ -30,6 +30,7 @@ const BuscarTramites = () => {
         zsetidtramite(respuesta.data[0].idTramite);
       })
       .catch((error) => {
+        zsetidtramite([]);
         console.log(error);
       });
   };
