@@ -10,6 +10,8 @@ import {
   Heading,
   Select,
   Link,
+  FormLabel,
+  FormControl,
 } from "@chakra-ui/react";
 
 import { useUsuarioStore } from "../../store/usuarioStore";
@@ -59,16 +61,20 @@ const Usuario = (props) => {
 
   return (
     <>
-      <Flex minWidth="max-content" alignItems="center" gap="2">
-        <Box p="2">
-          <Heading size="sm">{zdescusuario}</Heading>
-        </Box>
+      <Flex minWidth="max-content" alignItems="center">
+        <FormControl>
+          <Heading color={"white"} size={10}>
+            USUARIO
+          </Heading>
+          <FormLabel>{zdescusuario}</FormLabel>
+        </FormControl>
         <Spacer />
-        <Box>
-          <Heading size={"sm"}>{zdescsector} </Heading>
-        </Box>
+        <FormControl>
+          <Heading size={10}>SECTOR </Heading>
+          <FormLabel>{zdescsector}</FormLabel>
+        </FormControl>
         <Spacer />
-        <ButtonGroup gap="2">
+        <ButtonGroup>
           <Button
             size={"sm"}
             colorScheme="red"

@@ -8,12 +8,12 @@ const Cabecera = () => {
   return (
     <>
       {zconectado == true ? (
-        <Box p={2} bgColor={"blue.300"}>
-          <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-            <GridItem colSpan={2} h="10">
+        <Box bgGradient="linear(to-r, blue.400, blue.300)">
+          <Grid templateColumns="repeat(5, 1fr)" w="80%" mx={"auto"}>
+            <GridItem colSpan={2}>
               <Menu />
             </GridItem>
-            <GridItem colStart={4} colEnd={6} h="10">
+            <GridItem colStart={4} colEnd={6}>
               <Usuario />
             </GridItem>
           </Grid>

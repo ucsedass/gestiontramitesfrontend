@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Movimientos from "react-data-table-component";
 import clienteAxios from "@/config/axios";
-import { Stack, Badge, Icon } from "@chakra-ui/react";
+import {
+  Stack,
+  Badge,
+  Icon,
+  Heading,
+  Flex,
+  FormLabel,
+  Spacer,
+} from "@chakra-ui/react";
 import Moment from "moment";
 import { useTramiteStore } from "@/store/tramiteStore";
 import { estiloTablas } from "../styles/estiloTablas";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaExchangeAlt } from "react-icons/fa";
 
 const MovimientosTramites = () => {
   const zidtramite = useTramiteStore((state) => state.idTramite);
@@ -77,6 +85,14 @@ const MovimientosTramites = () => {
 
   return (
     <>
+      <Heading mt={2} color={"blue"} fontSize={16}>
+        <Flex>
+          <FaExchangeAlt />
+
+          <FormLabel ml={2}>MOVIMIENTOS</FormLabel>
+        </Flex>
+      </Heading>
+
       <Stack
         w="100%"
         mx="auto"

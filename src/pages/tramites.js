@@ -12,11 +12,7 @@ const Tramites = () => {
     <>
       {zconectado == true ? (
         <>
-          {zsector === 1 ? (
-            <AbmTramites />
-          ) : (
-            <p>tiene que ser de mesa de entrada</p>
-          )}
+          {zsector === 1 ? <AbmTramites /> : <></>}
 
           <TablaTramites />
         </>

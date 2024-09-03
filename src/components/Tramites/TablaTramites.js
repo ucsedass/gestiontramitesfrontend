@@ -23,6 +23,10 @@ import {
   Select,
   Input,
   Textarea,
+  Heading,
+  FormControl,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
 import { estiloTablas } from "../styles/estiloTablas";
 
@@ -63,6 +67,11 @@ const TablaTramites = () => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log("valor de sectores:", sectores);
+    sectores.length > 0 ? setSectorSeleccionado(sectores[0].idSector) : null;
+  }, [sectores]);
+
   const columns = [
     {
       name: "Tramite",
@@ -72,7 +81,7 @@ const TablaTramites = () => {
     {
       name: "Fecha",
       selector: (row) => Moment(row.tramiteFechaIng).format("DD-MM-YYYY HH:mm"),
-      width: "120px",
+      width: "150px",
     },
     {
       name: "Folios",
@@ -237,52 +246,73 @@ const TablaTramites = () => {
         <ModalOverlay />
         <ModalContent>
           <ModalBody>
-            <p>
-              Tramite:{tramiteSeleccionado}Sector: {sectorSeleccionado}
-            </p>
+            <Center>
+              <Heading fontSize={18} mb={2} mt={1}>
+                {" "}
+                PASE DE TRAMITES
+              </Heading>
+            </Center>
 
-            <Select
-              size={"sm"}
-              name="sectorSeleccionado"
-              id="sectorSeleccionado"
-              onChange={(e) => {
-                setSectorSeleccionado(e.target.value);
-              }}
-            >
-              {sectores.length > 0
-                ? sectores.map(({ idSector, sectorDescripcion }) => (
-                    <option key={idSector} value={idSector}>
-                      {" "}
-                      {idSector + "|" + sectorDescripcion}
-                    </option>
-                  ))
-                : null}
-            </Select>
-            <Textarea
-              name="observacionespase"
-              id="observacionespase"
-              value={observacionesPase}
-              onChange={(e) => {
-                setObservacionesPase(e.target.value);
-              }}
-              mt={2}
-            ></Textarea>
-            <Button
-              colorScheme={"green"}
-              onClick={() => {
-                realizarPase();
-              }}
-            >
-              REALIZAR PASE
-            </Button>
-            <Button
-              size={"sm"}
-              onClick={() => {
-                setModalNuevoPase(false);
-              }}
-            >
-              cerrar
-            </Button>
+            <FormControl>
+              <Heading fontSize={12}> SECTOR</Heading>
+              <Select
+                mt={1}
+                size={"sm"}
+                name="sectorSeleccionado"
+                id="sectorSeleccionado"
+                value={sectorSeleccionado}
+                onChange={(e) => {
+                  setSectorSeleccionado(e.target.value);
+                }}
+              >
+                {sectores.length > 0
+                  ? sectores.map(({ idSector, sectorDescripcion }) => (
+                      <option key={idSector} value={idSector}>
+                        {" "}
+                        {idSector + "|" + sectorDescripcion}
+                      </option>
+                    ))
+                  : null}
+              </Select>
+            </FormControl>
+            <FormControl mt={2}>
+              <Heading fontSize={12}>OBSERVACIONES</Heading>
+              <Textarea
+                mt={1}
+                name="observacionespase"
+                id="observacionespase"
+                value={observacionesPase}
+                onChange={(e) => {
+                  setObservacionesPase(e.target.value);
+                }}
+              ></Textarea>
+            </FormControl>
+
+            <Flex mt={2}>
+              <Box p="1">
+                <Button
+                  size={"sm"}
+                  colorScheme={"green"}
+                  onClick={() => {
+                    realizarPase();
+                  }}
+                >
+                  REALIZAR PASE
+                </Button>
+              </Box>
+              <Spacer />
+              <Box p="1">
+                <Button
+                  size={"sm"}
+                  colorScheme={"red"}
+                  onClick={() => {
+                    setModalNuevoPase(false);
+                  }}
+                >
+                  CERRAR
+                </Button>
+              </Box>
+            </Flex>
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -247,14 +247,16 @@ const AbmTramites = () => {
                     }}
                     size={"sm"}
                   ></Input>
-                  <Button mx="2" size={"sm"} colorScheme={"orange"}>
-                    Buscar
+                  <Button ml={2} my={"auto"} size={"xs"} colorScheme={"orange"}>
+                    BUSCAR
                   </Button>
                 </Flex>
               </FormControl>
               <FormControl>
                 <Heading fontSize={12}>Nombre alumno</Heading>
-                <FormLabel size={"sm"}>RODRIGO JOAQUIN GUZMAN</FormLabel>
+                <FormLabel size={"sm"} my={"auto"}>
+                  RODRIGO JOAQUIN GUZMAN
+                </FormLabel>
               </FormControl>
             </>
           ) : (
