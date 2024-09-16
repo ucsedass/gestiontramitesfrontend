@@ -1,5 +1,5 @@
 import React from "react";
-import AbmTramites from "@/components/Tramites/AbmTramites";
+import NuevoTramite from "@/components/Tramites/NuevoTramite";
 import TablaTramites from "@/components/Tramites/TablaTramites";
 
 import { useUsuarioStore } from "@/store/usuarioStore";
@@ -12,7 +12,7 @@ const Tramites = () => {
     <>
       {zconectado == true ? (
         <>
-          {zsector === 1 ? <AbmTramites /> : <></>}
+          {zsector === 1 ? <NuevoTramite /> : <></>}
 
           <TablaTramites />
         </>

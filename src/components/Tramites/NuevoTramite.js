@@ -19,7 +19,7 @@ import {
   AlertDescription,
 } from "@chakra-ui/react";
 import { useUsuarioStore } from "@/store/usuarioStore";
-const AbmTramites = () => {
+const NuevoTramite = () => {
   const zusuario = useUsuarioStore((state) => state.idUsuario);
   const zsector = useUsuarioStore((state) => state.idSector);
   const zactualizar = useUsuarioStore((state) => state.actualizar);
@@ -255,7 +255,7 @@ const AbmTramites = () => {
               <FormControl>
                 <Heading fontSize={12}>Nombre alumno</Heading>
                 <FormLabel size={"sm"} my={"auto"}>
-                  RODRIGO JOAQUIN GUZMAN
+                  listo para llamar SP por dni_alumno
                 </FormLabel>
               </FormControl>
             </>
@@ -339,4 +339,4 @@ const AbmTramites = () => {
     </>
   );
 };
-export default AbmTramites;
+export default NuevoTramite;

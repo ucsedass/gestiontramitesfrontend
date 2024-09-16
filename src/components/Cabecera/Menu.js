@@ -1,7 +1,9 @@
 import React from "react";
 import { Menu, MenuButton, MenuList, MenuItem, HStack } from "@chakra-ui/react";
+import { useUsuarioStore } from "@/store/usuarioStore";
 import { useRouter } from "next/router";
 const menuPrincipal = () => {
+  const zsector = useUsuarioStore((state) => state.idSector);
   const router = useRouter();
   return (
     <>
@@ -13,7 +15,6 @@ const menuPrincipal = () => {
         <Menu isLazy>
           <MenuButton>Tramites</MenuButton>
           <MenuList>
-            {/* MenuItems are not rendered unless Menu is open */}
             <MenuItem
               onClick={() => {
                 router.push("/tramites");
@@ -28,6 +29,15 @@ const menuPrincipal = () => {
             >
               Consulta trámites
             </MenuItem>
+            {zsector == 1 ? (
+              <MenuItem
+                onClick={() => {
+                  router.push("/bmtramites");
+                }}
+              >
+                BM trámites
+              </MenuItem>
+            ) : null}
           </MenuList>
         </Menu>
       </HStack>

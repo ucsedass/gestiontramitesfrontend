@@ -62,7 +62,7 @@ const MovimientosTramites = () => {
     },
     {
       cell: () => <Icon as={FaSearch} />,
-      center: true,
+      center: "true",
     },
   ];
 

@@ -101,6 +101,18 @@ const DatosTramites = () => {
                 </FormControl>
               </Box>
             </HStack>
+            <HStack templateColumns="repeat(7, 4fr)" gap={2}>
+              <Box w="100%">
+                <FormControl>
+                  <Heading color={"blue"} fontSize={10}>
+                    SECTOR ACTUAL
+                  </Heading>
+                  <FormLabel>
+                    {datosTramite[0].sectorActualTramiteDesc}
+                  </FormLabel>
+                </FormControl>
+              </Box>
+            </HStack>
           </Stack>
         </>
       ) : (
