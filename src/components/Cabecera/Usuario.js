@@ -66,12 +66,14 @@ const Usuario = (props) => {
           <Heading color={"white"} size={10}>
             USUARIO
           </Heading>
-          <FormLabel>{zdescusuario}</FormLabel>
+          <FormLabel color={"green.200"}>{zdescusuario}</FormLabel>
         </FormControl>
         <Spacer />
         <FormControl>
-          <Heading size={10}>SECTOR </Heading>
-          <FormLabel>{zdescsector}</FormLabel>
+          <Heading color={"white"} size={10}>
+            SECTOR{" "}
+          </Heading>
+          <FormLabel color={"green.200"}>{zdescsector}</FormLabel>
         </FormControl>
         <Spacer />
         <ButtonGroup>
@@ -92,7 +94,7 @@ const Usuario = (props) => {
               );
             }}
           >
-            cerrar sesion
+            CERRAR SESION
           </Button>
         </ButtonGroup>
       </Flex>

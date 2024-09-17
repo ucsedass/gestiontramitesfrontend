@@ -17,6 +17,7 @@ import {
   AlertTitle,
   AlertDescription,
   HStack,
+  Text,
 } from "@chakra-ui/react";
 import Moment from "moment";
 import { useUsuarioStore } from "@/store/usuarioStore";
@@ -172,7 +173,9 @@ const BmTramites = () => {
       {datosTramite.length > 0 ? (
         <Box w="100%" mx="auto" mt={4}>
           <Center>
-            <FormLabel mb="0px">MODIFICAR TRAMITE</FormLabel>
+            <Text mb="0px" as="b">
+              MODIFICAR TRAMITE
+            </Text>
           </Center>
 
           <Stack

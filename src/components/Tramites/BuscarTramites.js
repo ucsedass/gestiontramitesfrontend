@@ -72,7 +72,7 @@ const BuscarTramites = () => {
             colorScheme={"orange"}
             onClick={() => buscarTramite()}
           >
-            Buscar
+            BUSCAR
           </Button>
         </Box>
       </Stack>

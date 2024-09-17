@@ -11,7 +11,7 @@ const abmtramites = () => {
     <>
       {zconectado == true ? (
         <>
-          <Stack w="80%" mx="auto" spacing={2} p={2} mt={2}>
+          <Stack w="80%" mx="auto" spacing={2} p={2} mt={2} mb={4}>
             <BuscarTramites />
             <BmTramites />
             <MovimientosTramites />

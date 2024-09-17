@@ -8,7 +8,7 @@ const Cabecera = () => {
   return (
     <>
       {zconectado == true ? (
-        <Box bgGradient="linear(to-r, blue.400, blue.300)">
+        <Box bgGradient="linear(to-r, blue.600, blue.700)">
           <Grid templateColumns="repeat(5, 1fr)" w="80%" mx={"auto"}>
             <GridItem colSpan={2}>
               <Menu />
