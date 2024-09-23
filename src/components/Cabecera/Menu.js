@@ -9,11 +9,11 @@ const menuPrincipal = () => {
     <>
       <HStack>
         <Menu isLazy>
-          <MenuButton>Inicio</MenuButton>
+          <MenuButton color={"white"}>INICIO</MenuButton>
         </Menu>
 
         <Menu isLazy>
-          <MenuButton>Tramites</MenuButton>
+          <MenuButton color={"white"}>TRAMITES</MenuButton>
           <MenuList>
             <MenuItem
               onClick={() => {

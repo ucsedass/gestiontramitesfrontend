@@ -10,18 +10,43 @@ import {
   FormLabel,
   Spacer,
   Button,
+  Tooltip,
 } from "@chakra-ui/react";
 import Moment from "moment";
 import { useTramiteStore } from "@/store/tramiteStore";
 import { estiloTablas } from "../styles/estiloTablas";
-import { FaSearch, FaExchangeAlt } from "react-icons/fa";
+import {
+  FaSearch,
+  FaExchangeAlt,
+  FaCheckCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 
-const MovimientosTramites = () => {
+import {
+  PhoneIcon,
+  AddIcon,
+  WarningIcon,
+  CheckCircleIcon,
+} from "@chakra-ui/icons";
+
+const MovimientosTramitesBM = () => {
   const zidtramite = useTramiteStore((state) => state.idTramite);
   const setIdTramite = useTramiteStore((state) => state.setIdTramite);
   const [movTramites, setMovTramites] = useState([]);
 
   const columns = [
+    {
+      name: "",
+      selector: (row) =>
+        row.borrado === true ? (
+          <Tooltip label={row.sectorAceptaPaseDesc}>
+            <WarningIcon color={"red.500"} />
+          </Tooltip>
+        ) : (
+          <CheckCircleIcon color={"green.500"} />
+        ),
+      width: "30px",
+    },
     {
       name: "Fecha pase",
       selector: (row) =>
@@ -61,6 +86,7 @@ const MovimientosTramites = () => {
       name: "observaciones",
       selector: (row) => row.observaciones,
     },
+
     {
       cell: () => <Icon as={FaSearch} />,
       center: "true",
@@ -83,6 +109,19 @@ const MovimientosTramites = () => {
         console.log(error);
       });
   }, [zidtramite]);
+
+  const eliminarUltimoMovimiento = () => {
+    clienteAxios("/eliminarultimomovimiento", {
+      method: "POST",
+      data: { idTramite: zidtramite },
+    })
+      .then((respuesta) => {
+        console.log("Movimientos:", respuesta.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -110,6 +149,16 @@ const MovimientosTramites = () => {
               noDataComponent={<>Sin movimientos</>}
               customStyles={estiloTablas}
             />
+            <Button
+              colorScheme="red"
+              size={"sm"}
+              mt={3}
+              onClick={() => {
+                eliminarUltimoMovimiento();
+              }}
+            >
+              ELIMINAR ULTIMO MOVIMIENTO
+            </Button>
           </Stack>
         </>
       ) : null}
@@ -117,4 +166,4 @@ const MovimientosTramites = () => {
   );
 };
 
-export default MovimientosTramites;
+export default MovimientosTramitesBM;
