@@ -297,7 +297,7 @@ const TablaTramites = () => {
                     realizarPase();
                   }}
                 >
-                  REALIZAR PASE
+                  CONFIRMAR
                 </Button>
               </Box>
               <Spacer />

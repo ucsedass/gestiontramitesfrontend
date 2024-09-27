@@ -18,6 +18,11 @@ import {
   AlertDescription,
   HStack,
   Text,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Spacer,
 } from "@chakra-ui/react";
 import Moment from "moment";
 import { useUsuarioStore } from "@/store/usuarioStore";
@@ -26,10 +31,13 @@ import { useTramiteStore } from "@/store/tramiteStore";
 const BmTramites = () => {
   const zidtramite = useTramiteStore((state) => state.idTramite);
   const zusuario = useUsuarioStore((state) => state.idUsuario);
+  const zdescusuario = useUsuarioStore((state) => state.descUsuario);
   const zsector = useUsuarioStore((state) => state.idSector);
   const zactualizar = useUsuarioStore((state) => state.actualizar);
   const setActualizar = useUsuarioStore((state) => state.setActualizar);
   /**************************************************************/
+  const [observacionesEliminacion, setObservacionesEliminacion] = useState("");
+  const [modalEliminarTramite, setModalEliminatTramite] = useState(false);
   const [datosTramite, setDatosTramite] = useState({});
   const [clasesTramites, setClasesTramites] = useState({});
   const [tiposTramites, setTiposTramites] = useState({});
@@ -72,20 +80,23 @@ const BmTramites = () => {
       data: { idTramite: zidtramite },
     })
       .then((respuesta) => {
-        console.log(respuesta.data);
         setDatosTramite(respuesta.data);
-        setIdClaseTramite(respuesta.data[0].idClaseTramite);
-        setIdtipoTramite(respuesta.data[0].idTipoTramite);
-        setTramiteFechaing(
-          Moment(respuesta.data[0].tramiteFechaIng).format("YYYY-MM-DDTHH:mm")
-        );
-        setTramiteFolio(respuesta.data[0].tramiteFolio);
-        setIdTipoSolicitanteTramite(respuesta.data[0].idTipoSolicitanteTramite);
-        setDescTramSolicitanteExterno(
-          respuesta.data[0].descTramSolicitanteExterno
-        );
-        setDniSolicitanteAlumno(respuesta.data[0].dniSolicitanteAlumno);
-        setObservaciones(respuesta.data[0].observaciones);
+        if (respuesta.data.length > 0) {
+          setIdtipoTramite(respuesta.data[0].idTipoTramite);
+          setIdClaseTramite(respuesta.data[0].idClaseTramite);
+          setTramiteFechaing(
+            Moment(respuesta.data[0].tramiteFechaIng).format("YYYY-MM-DDTHH:mm")
+          );
+          setTramiteFolio(respuesta.data[0].tramiteFolio);
+          setIdTipoSolicitanteTramite(
+            respuesta.data[0].idTipoSolicitanteTramite
+          );
+          setDescTramSolicitanteExterno(
+            respuesta.data[0].descTramSolicitanteExterno
+          );
+          setDniSolicitanteAlumno(respuesta.data[0].dniSolicitanteAlumno);
+          setObservaciones(respuesta.data[0].observaciones);
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -155,6 +166,13 @@ const BmTramites = () => {
   const eliminarTramite = () => {
     let objTramite = {
       idTramite: parseInt(zidtramite),
+      observacionesEliminacion:
+        observacionesEliminacion +
+        " " +
+        "\nEliminado por : " +
+        zdescusuario +
+        "\nEl dia :" +
+        Moment(new Date()).format("DD-MM-YYYYTHH:mm"),
     };
     clienteAxios("/eliminartramite", {
       method: "POST",
@@ -408,7 +426,8 @@ const BmTramites = () => {
               w={"100%"}
               size={"sm"}
               onClick={() => {
-                eliminarTramite();
+                //  eliminarTramite();
+                setModalEliminatTramite(true);
               }}
             >
               ELIMINAR TRAMITE
@@ -426,7 +445,70 @@ const BmTramites = () => {
     <AlertDescription>Revisar datos.</AlertDescription>
   </Alert> */}
         </Box>
-      ) : null}
+      ) : (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>No existe trámite.</AlertTitle>
+          <AlertDescription>Revisar datos.</AlertDescription>
+        </Alert>
+      )}
+
+      <Modal
+        isOpen={modalEliminarTramite}
+        onClose={() => {
+          setModalEliminatTramite(false);
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody>
+            <Center>
+              <Heading fontSize={18} mb={2} mt={1}>
+                ELIMINAR TRAMITE
+              </Heading>
+            </Center>
+            <FormControl mt={2}>
+              <Heading fontSize={12}>OBSERVACIONES DE ELIMINACION</Heading>
+              <Textarea
+                mt={1}
+                name="observacioneseliminacion"
+                id="observacioneseliminacion"
+                value={observacionesEliminacion}
+                onChange={(e) => {
+                  setObservacionesEliminacion(e.target.value);
+                }}
+              ></Textarea>
+            </FormControl>
+
+            <Flex mt={2}>
+              <Box p="1">
+                <Button
+                  size={"sm"}
+                  colorScheme={"green"}
+                  onClick={() => {
+                    eliminarTramite();
+                    setModalEliminatTramite(false);
+                  }}
+                >
+                  CONFIRMAR
+                </Button>
+              </Box>
+              <Spacer />
+              <Box p="1">
+                <Button
+                  size={"sm"}
+                  colorScheme={"red"}
+                  onClick={() => {
+                    setModalEliminatTramite(false);
+                  }}
+                >
+                  CERRAR
+                </Button>
+              </Box>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

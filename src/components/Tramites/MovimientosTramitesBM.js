@@ -11,9 +11,18 @@ import {
   Spacer,
   Button,
   Tooltip,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  Center,
+  FormControl,
+  Textarea,
+  Box,
 } from "@chakra-ui/react";
 import Moment from "moment";
 import { useTramiteStore } from "@/store/tramiteStore";
+import { useUsuarioStore } from "@/store/usuarioStore";
 import { estiloTablas } from "../styles/estiloTablas";
 import {
   FaSearch,
@@ -32,14 +41,16 @@ import {
 const MovimientosTramitesBM = () => {
   const zidtramite = useTramiteStore((state) => state.idTramite);
   const setIdTramite = useTramiteStore((state) => state.setIdTramite);
+  const zdescusuario = useUsuarioStore((state) => state.descUsuario);
   const [movTramites, setMovTramites] = useState([]);
-
+  const [observacionesEliminacion, setObservacionesEliminacion] = useState("");
+  const [modalEliminarUltMov, setModalEliminarUltMov] = useState(false);
   const columns = [
     {
       name: "",
       selector: (row) =>
         row.borrado === true ? (
-          <Tooltip label={row.sectorAceptaPaseDesc}>
+          <Tooltip label={row.observacionesEliminacion}>
             <WarningIcon color={"red.500"} />
           </Tooltip>
         ) : (
@@ -86,11 +97,6 @@ const MovimientosTramitesBM = () => {
       name: "observaciones",
       selector: (row) => row.observaciones,
     },
-
-    {
-      cell: () => <Icon as={FaSearch} />,
-      center: "true",
-    },
   ];
 
   useEffect(() => {
@@ -102,7 +108,7 @@ const MovimientosTramitesBM = () => {
       data: { idTramite: zidtramite },
     })
       .then((respuesta) => {
-        console.log("Movimientos:", respuesta.data);
+        console.log("Movimientos tramite", respuesta.data);
         setMovTramites(respuesta.data);
       })
       .catch((error) => {
@@ -113,7 +119,16 @@ const MovimientosTramitesBM = () => {
   const eliminarUltimoMovimiento = () => {
     clienteAxios("/eliminarultimomovimiento", {
       method: "POST",
-      data: { idTramite: zidtramite },
+      data: {
+        idTramite: zidtramite,
+        observacionesEliminacion:
+          observacionesEliminacion +
+          " " +
+          "\nEliminado por : " +
+          zdescusuario +
+          "\nEl dia :" +
+          Moment(new Date()).format("DD-MM-YYYYTHH:mm"),
+      },
     })
       .then((respuesta) => {
         console.log("Movimientos:", respuesta.data);
@@ -154,7 +169,7 @@ const MovimientosTramitesBM = () => {
               size={"sm"}
               mt={3}
               onClick={() => {
-                eliminarUltimoMovimiento();
+                setModalEliminarUltMov(true);
               }}
             >
               ELIMINAR ULTIMO MOVIMIENTO
@@ -162,6 +177,63 @@ const MovimientosTramitesBM = () => {
           </Stack>
         </>
       ) : null}
+
+      <Modal
+        isOpen={modalEliminarUltMov}
+        onClose={() => {
+          setModalEliminarUltMov(false);
+        }}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody>
+            <Center>
+              <Heading fontSize={18} mb={2} mt={1}>
+                ELIMINAR ULTIMO MOVIMIENTO
+              </Heading>
+            </Center>
+            <FormControl mt={2}>
+              <Heading fontSize={12}>OBSERVACIONES DE ELIMINACION</Heading>
+              <Textarea
+                mt={1}
+                name="observacioneseliminacion"
+                id="observacioneseliminacion"
+                value={observacionesEliminacion}
+                onChange={(e) => {
+                  setObservacionesEliminacion(e.target.value);
+                }}
+              ></Textarea>
+            </FormControl>
+
+            <Flex mt={2}>
+              <Box p="1">
+                <Button
+                  size={"sm"}
+                  colorScheme={"green"}
+                  onClick={() => {
+                    eliminarUltimoMovimiento();
+                    setModalEliminarUltMov(false);
+                  }}
+                >
+                  CONFIRMAR
+                </Button>
+              </Box>
+              <Spacer />
+              <Box p="1">
+                <Button
+                  size={"sm"}
+                  colorScheme={"red"}
+                  onClick={() => {
+                    setModalEliminarUltMov(false);
+                  }}
+                >
+                  CERRAR
+                </Button>
+              </Box>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

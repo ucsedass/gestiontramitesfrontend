@@ -25,7 +25,6 @@ const DatosTramites = () => {
       data: { idTramite: zidtramite },
     })
       .then((respuesta) => {
-        console.log(respuesta.data);
         setDatosTramite(respuesta.data);
       })
       .catch((error) => {
@@ -51,7 +50,7 @@ const DatosTramites = () => {
             p={2}
             mt={2}
           >
-            <HStack templateColumns="repeat(7, 4fr)" gap={2}>
+            <HStack templatecolumns="repeat(7, 4fr)" gap={2}>
               <Box w="100%">
                 <FormControl>
                   <Heading color={"blue"} fontSize={10}>
@@ -101,7 +100,7 @@ const DatosTramites = () => {
                 </FormControl>
               </Box>
             </HStack>
-            <HStack templateColumns="repeat(7, 4fr)" gap={2}>
+            <HStack templatecolumns="repeat(7, 4fr)" gap={2}>
               <Box w="100%">
                 <FormControl>
                   <Heading color={"blue"} fontSize={10}>

@@ -61,10 +61,6 @@ const MovimientosTramites = () => {
       name: "observaciones",
       selector: (row) => row.observaciones,
     },
-    {
-      cell: () => <Icon as={FaSearch} />,
-      center: "true",
-    },
   ];
 
   useEffect(() => {
@@ -76,7 +72,6 @@ const MovimientosTramites = () => {
       data: { idTramite: zidtramite },
     })
       .then((respuesta) => {
-        console.log("Movimientos:", respuesta.data);
         setMovTramites(respuesta.data);
       })
       .catch((error) => {

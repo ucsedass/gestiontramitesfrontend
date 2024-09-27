@@ -16,8 +16,6 @@ const BuscarTramites = () => {
   const [tramiteAño, setTramiteAño] = useState(0);
 
   const buscarTramite = () => {
-    console.log("Buscar tramite", { tramiteNum, tramiteAño });
-
     clienteAxios("/buscartramite", {
       method: "POST",
       data: {
@@ -26,7 +24,6 @@ const BuscarTramites = () => {
       },
     })
       .then((respuesta) => {
-        console.log("Res busqueda tramite", respuesta.data);
         zsetidtramite(respuesta.data[0].idTramite);
       })
       .catch((error) => {
