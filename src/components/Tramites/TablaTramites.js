@@ -107,6 +107,8 @@ const TablaTramites = () => {
           <Badge colorScheme={"purple"}>{row.estadoDescripcion}</Badge>
         ) : row.idEstado === 3 ? (
           <Badge colorScheme={"orange"}> {row.estadoDescripcion} </Badge>
+        ) : row.idEstado === 4 ? (
+          <Badge colorScheme={"red"}> {row.estadoDescripcion} </Badge>
         ) : null,
       width: "200px",
     },

@@ -10,11 +10,18 @@ import {
   FormLabel,
   Spacer,
   Button,
+  Tooltip,
 } from "@chakra-ui/react";
 import Moment from "moment";
 import { useTramiteStore } from "@/store/tramiteStore";
 import { estiloTablas } from "../styles/estiloTablas";
 import { FaSearch, FaExchangeAlt } from "react-icons/fa";
+import {
+  PhoneIcon,
+  AddIcon,
+  WarningIcon,
+  CheckCircleIcon,
+} from "@chakra-ui/icons";
 
 const MovimientosTramites = () => {
   const zidtramite = useTramiteStore((state) => state.idTramite);
@@ -22,6 +29,18 @@ const MovimientosTramites = () => {
   const [movTramites, setMovTramites] = useState([]);
 
   const columns = [
+    {
+      name: "",
+      selector: (row) =>
+        row.borrado === true ? (
+          <Tooltip label={row.observacionesEliminacion}>
+            <WarningIcon color={"red.500"} />
+          </Tooltip>
+        ) : (
+          <CheckCircleIcon color={"green.500"} />
+        ),
+      width: "30px",
+    },
     {
       name: "Fecha pase",
       selector: (row) =>
