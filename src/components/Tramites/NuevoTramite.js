@@ -17,6 +17,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
+  Text,
 } from "@chakra-ui/react";
 import { useUsuarioStore } from "@/store/usuarioStore";
 const NuevoTramite = () => {
@@ -39,6 +40,7 @@ const NuevoTramite = () => {
     useState("");
   const [dniSolicitanteAlumno, setDniSolicitanteAlumno] = useState(0);
   const [observaciones, setObservaciones] = useState("");
+  const [nombreParticipante, setNombreParticipante] = useState("");
 
   useEffect(() => {
     clienteAxios("/traerclasestramites", {
@@ -106,6 +108,22 @@ const NuevoTramite = () => {
       });
   };
 
+  const buscarParticipante = () => {
+    clienteAxios("/buscarparticipante", {
+      method: "POST",
+      data: { NroDoc: dniSolicitanteAlumno.trim() },
+    })
+      .then((respuesta) => {
+        console.log("Participante:", respuesta.data);
+        setNombreParticipante(
+          respuesta.data[0].Apellido + "," + respuesta.data[0].Nombre
+        );
+      })
+      .catch((error) => {
+        console.log(error);
+        setNombreParticipante("");
+      });
+  };
   return (
     <>
       <Box w="80%" mx="auto" mt={4}>
@@ -247,16 +265,24 @@ const NuevoTramite = () => {
                     }}
                     size={"sm"}
                   ></Input>
-                  <Button ml={2} my={"auto"} size={"xs"} colorScheme={"orange"}>
+                  <Button
+                    ml={2}
+                    my={"auto"}
+                    size={"xs"}
+                    colorScheme={"orange"}
+                    onClick={() => {
+                      buscarParticipante();
+                    }}
+                  >
                     BUSCAR
                   </Button>
                 </Flex>
               </FormControl>
               <FormControl>
                 <Heading fontSize={12}>Nombre alumno</Heading>
-                <FormLabel size={"sm"} my={"auto"}>
-                  listo para llamar SP por dni_alumno
-                </FormLabel>
+                <Text fontSize={"xl"} as="b">
+                  {nombreParticipante}
+                </Text>
               </FormControl>
             </>
           ) : (

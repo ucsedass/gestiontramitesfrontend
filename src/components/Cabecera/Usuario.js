@@ -87,10 +87,10 @@ const Usuario = (props) => {
               setDescUsuario("");
               router.push(
                 {
-                  pathname: "/login",
+                  pathname: "/",
                   query: { estado: "desconectado" },
                 },
-                "./login"
+                "./"
               );
             }}
           >
